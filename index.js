@@ -5,6 +5,7 @@ import{ userRouter }from './Routes/userRoutes.js';
 import { errorHandler } from './MiddleWares/errorMiddlewares.js';
 import { connectDB } from './config/connect.js';
 import cors from 'cors'
+import postRouter from './Routes/postRouter.js';
 
 connectDB();
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended : false }))
 app.use(cors())
 
 app.use('/api/users', userRouter)
+app.use('/api/posts', postRouter )
 app.use(errorHandler)
 
 
