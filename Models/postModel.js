@@ -4,7 +4,7 @@ const postSchema = mongoose.Schema(
   {
     caption: {
       type: String,
-      required: true,
+      required: false,
     },
     background: {
       startColor: {
@@ -20,10 +20,20 @@ const postSchema = mongoose.Schema(
         default: '',
       },
     },
+    uploadImage:{
+      type:String,
+      default: null,
+      required:false,
+    },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+    },
+    likes: {
+      type: Array,
+      default: [],
+      required: false
     },
   },
   {
