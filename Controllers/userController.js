@@ -1,5 +1,6 @@
 import {User} from '../Models/userModel.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer';
 
    const sendOtp = async(newUser, m_mail) =>{
@@ -85,7 +86,20 @@ export const registerUser = async(req, res) => {
 
        sendOtp(newUser, m_mail)
         
-        return res.status(201).json(newUser) 
+        return res.status(201).json({
+          _id: newUser._id,
+          f_name: newUser.f_name,
+          l_name: newUser.l_name,
+          date: newUser.date,
+          month: newUser.month,
+          year: newUser.year,
+          m_mail: newUser.m_mail,
+          password: newUser.password,
+          pronoun: newUser.pronoun,
+          otp: newUser.otp,
+          gender: newUser.gender,
+          token: await genrateToken(newUser._id),
+        }) 
     } catch (error) {
         console.error("Registration error: ", error)
         return res.status(500).json({message: "Server error"}) 
@@ -133,5 +147,10 @@ export const loginUser = async(req, res)=>{
   if(!checkPassword){
     return res.status(401).json({message: "Invalid email or password"})
   }
-  return res.status(200).json({message: "Login successful", user: checkUser})
+  return res.status(200).json({message: "Login successful", user: checkUser, token: await genrateToken(checkUser._id)})
+  console.log(checkUser._id)
+}
+
+export const genrateToken = async(id) =>{
+  return jwt.sign({id}, process.env.JWT_SECRETE, {expiresIn: '15d'})
 }

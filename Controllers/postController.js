@@ -56,3 +56,35 @@ export const makeReaction = async (req, res) => {
     res.status(500).json({ message: "Server error while making reaction" });
   }
 };
+
+
+export const getReactions = async(req, res)=>{
+  const {post_id} = req.params;
+
+  const findPost = await Post.findById(post_id);
+  if(!findPost){
+   res.status(404)
+    throw new Error('Post not found')
+  }
+
+  res.send(findPost.likes)
+}
+
+
+export const addComments = async (req, res) =>{
+    const {post_id} = req.params;
+    const {user_id} = req.user._id
+    const {comment} = req.body;
+
+    const findPost = await Post.findById(post_id)
+
+    if(!findPost){
+      res.status(404)
+      throw new Error("Post not found")
+    }
+
+    findPost.comments.push({user: req.user, comment, post_id})
+
+    await findPost.save()
+    res.send(findPost)
+}
