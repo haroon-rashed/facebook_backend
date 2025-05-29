@@ -25,7 +25,7 @@ export const addPost = async (req, res) => {
 
 
 export const getPosts = async (req, res) =>{
-  const allPosts = await Post.find().sort({createdAt : -1});
+  const allPosts = await Post.find().populate('user_id', 'f_name l_name').sort({createdAt : -1});
   res.send(allPosts)
 }
 

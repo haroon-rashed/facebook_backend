@@ -147,10 +147,35 @@ export const loginUser = async(req, res)=>{
   if(!checkPassword){
     return res.status(401).json({message: "Invalid email or password"})
   }
-  return res.status(200).json({message: "Login successful", user: checkUser, token: await genrateToken(checkUser._id)})
+  return res.status(201).json({
+    _id: checkUser._id,
+    f_name: checkUser.f_name,
+    l_name: checkUser.l_name,
+    date: checkUser.date,
+    month: checkUser.month,
+    year: checkUser.year,
+    m_mail: checkUser.m_mail,
+    password: checkUser.password,
+    pronoun: checkUser.pronoun,
+    otp: checkUser.otp,
+    gender: checkUser.gender,
+    token: await genrateToken(checkUser._id),
+  }) 
   console.log(checkUser._id)
 }
 
 export const genrateToken = async(id) =>{
   return jwt.sign({id}, process.env.JWT_SECRETE, {expiresIn: '15d'})
+}
+
+
+export const getUserInfo = async (req, res) =>{
+  const {user_id} = req.params;
+  const myInfo = await User.findById(user_id)
+  res.send(myInfo)
+}
+
+export const allUsers = async (req, res) => {
+  const allUsers = await User.find()
+  res.send(allUsers)
 }
